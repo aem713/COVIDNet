@@ -1,2 +1,0 @@
-Testing using Git
-#this is just to test some stuff using github, nothing to do with project
