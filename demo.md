@@ -13,5 +13,6 @@ https://drive.google.com/drive/u/0/folders/1XM23Kxzh-mSamNlMHhqp7V1VEtZlp3_c
 
 DEMO/Tutorial
 --------------------------------
-To use the various features in this project, run the corresponding .ipynb file in the folder you want to use.
+To use the various features in this project, run the corresponding .ipynb file in the folder you want to use.\\
+
 For example, to use the Data Wrangling feature, simply run the .ipynb file in the "Data Wrangling" folder. In this case, that .ipynb file is "DSCI_400_Audio_Regroup.ipynb".  (In future updates, file names and folder names will be more similar for improved clarity).

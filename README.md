@@ -34,4 +34,4 @@ Authors:
  Andrew Xavier, German Gonzalez, Xuanyi (Jessica) Chen, Amar Moturu, James Beattie
 
  ---------------------------------------------------------
- Warning: Running 'DSCI_400_Audio_Regroup.ipynb' more than once could cause organizational errors if terminated early due to its long run time. Only run once if possible.
+ Warning: Running 'DSCI_400_Audio_Regroup.ipynb' more than once could cause organizational errors if terminated early due to its long run time. Only run once if possible as multiple files may be generated.
