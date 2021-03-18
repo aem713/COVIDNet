@@ -1,4 +1,4 @@
-# DSCI-400
+# Covid-19 Prediction Model From Audio Data
 -------------------------
 Project Description
 -----------------------
