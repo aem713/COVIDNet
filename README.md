@@ -5,6 +5,7 @@ Project Description
 DSCI 400 COVID-19 Audio Project
 This process is to create a predictive model for covid-19 from a set of audio files.
 Broadly, the steps are  data cleaning, generating and normalizing Mel-spectrograms and then using a CNN.
+
 -------------------------------------------------------
 
 Dependencies
@@ -29,6 +30,7 @@ Authors:
  -Xuanyi (Jessica) Chen
  -Amar Moturu
  -James Beattie
+
  ---------------------------------------------------------
  Warning: Running 'DSCI_400_Audio_Regroup.ipynb' more than once could cause organizational errors if terminated early due to its long run time. Only run once if possible.
  DEMO method is shown in "DEMO.md"
