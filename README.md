@@ -20,6 +20,7 @@ INTERNAL TO PYTHON VERSION 3.9.2
 
 EXTERNAL TO PYTHON VERSION 3.9.2
 - google-colab 1.0.0 (2021)
+- google 0.1.1 (2021)
 - librosa version 0.8.0 (2021)
 - pandas version 1.2.3 (2021)
 - numpy version 1.20.0 (2021)
