@@ -41,7 +41,7 @@ def create_mel(path, sr = 22000, n_mels=512, fmax = 10000, top_db=30, eps = 1e-6
 
 
 class DataGenerator():
-    def __init__(self, sr, n_mels, fmax, top_db, eps, seed, dataset_type="train", path=path):
+    def __init__(self, sr, n_mels, fmax, top_db, eps, seed, path, dataset_type="train"):
         
         self.path = path
         self.sr = sr
