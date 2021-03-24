@@ -45,36 +45,55 @@ def subfolder_extractor(source, target, operation, flag):
   root_src_dir = os.path.join('.', source)
   root_target_dir = os.path.join('.',target)
 
-  # Walk across all files and directories in our root directory
-  for src_dir, dirs, files in os.walk(root_src_dir):
-    dst_dir = src_dir.replace(root_src_dir, root_target_dir)
+  if (flag):
+    depth = 1
+  else:
+    depth = 2
 
+  # print('root_src_dir: ' + str(root_src_dir))
+  # print('root_target_dir: ' + str(root_target_dir))
+  # print('-------------------------')
+  # Walk across all files and directories in our root directory
+
+  for src_dir, dirs, files in os.walk(root_src_dir):
+    if src_dir[len(root_src_dir):].count(os.sep) < depth:
+  
+  #for src_dir, dirs, files in os.walk(root_src_dir):
+      # print('src_dir: ' + src_dir)
+      # print('dirs: ' + str(dirs))
+      # print('files: ' + str(files))
+      # print('-----------------------')
+      dst_dir = src_dir.replace(root_src_dir, root_target_dir)
+      # print('dst_dir: ' + dst_dir)
+      # print('root_src_dir: ' + root_src_dir)
+      # print('root_target_dir: ' + root_target_dir)
+      # print('=======================')
     # Create the necessary destination directories to move the copies of the
     #   contents of the subfolders one is trying to remove.
-    if not os.path.exists(dst_dir):
-      os.mkdir(dst_dir)
+      if not os.path.exists(dst_dir):
+        os.mkdir(dst_dir)
 
-    for file_ in files:
+      for file_ in files:
       # If flag == 1, then rename files and remove their parent folders
-      if (flag):
-        ending = os.path.basename(os.path.normpath(root_src_dir))
-        os.replace(os.path.join(root_src_dir, file_), os.path.join(dst_dir, ending + '_' + file_))
+        if (flag):
+          ending = os.path.basename(os.path.normpath(root_src_dir))
+          os.replace(os.path.join(root_src_dir, file_), os.path.join(dst_dir, ending + '_' + file_))
 
       # If flag == 0, then simply remove the subfolders of the source directory
       #   and move the files contained in the subfolders to the src directory 
-      else:  
-        src_file = os.path.join(src_dir, file_)
-        dst_file = os.path.join(dst_dir, file_)
-        if os.path.exists(dst_file):
-          os.remove(dst_file)
+        else:  
+          src_file = os.path.join(src_dir, file_)
+          dst_file = os.path.join(dst_dir, file_)
+          if os.path.exists(dst_file):
+            os.remove(dst_file)
 
         # Either copy or move the remaining files in the original subfolders
-        if operation is 'copy':
-          shutil.copy(src_file, dst_dir)
-        elif operation is 'move':
-          shutil.move(src_file, dst_dir)
+          if operation is 'copy':
+            shutil.copy(src_file, dst_dir)
+          elif operation is 'move':
+            shutil.move(src_file, dst_dir)
 
-def cleaner(data_dir, new_path, flag):
+def cleaner(data_dir, new_path, desired_directories, flag):
   """
     Calls subfolder_extractor function and cleans up any remaining empty
     subfolders within the source folder given by data_dir
@@ -102,7 +121,12 @@ def cleaner(data_dir, new_path, flag):
     operation = 'move'
   else:
     operation = 'copy'
-
+    new_dirs = [d for d in os.listdir(new_path) 
+                 if os.path.isdir(os.path.join(new_path, d))]
+    for i in desired_directories:
+      if i in new_dirs:
+        shutil.rmtree(os.path.join(new_path, i))
+    
   # Call the subfolder_extractor function for all subfolders of data_dir
   for i in dir_paths:
     subfolder_extractor(i, new_path, operation, flag)
