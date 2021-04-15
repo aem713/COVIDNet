@@ -52,7 +52,7 @@ def build_model2(input_shape1, input_shape2, num_classes, BATCH_SIZE):
   Builds a Neural Network Model that will use MFCC data as inputs to differentiate audio clips between covid positive and covid negative cases.
   Inputs:
   - input_shape1: size of each MFCC data point
-  - input_shape2: size of each label for each data point
+  - input_shape2: size of each feature vector
   - num_classes: number of classes
   - BATCH_SIZE: the number of training examples utilized in one iteration
 
