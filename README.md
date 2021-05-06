@@ -1,10 +1,10 @@
-# Covid-19 Prediction Model From Audio Data
+# COVID-19 Prediction Model From Audio Data
 -------------------------
 Project Description
 -----------------------
 DSCI 400 COVID-19 Audio Project
-This process is to create a predictive model for covid-19 from a set of audio files.
-Broadly, the steps are  data cleaning, generating and normalizing Mel-spectrograms and then using a CNN.
+This process is to create a predictive model for COVID-19 from a set of audio files.
+Broadly, the steps are  data cleaning, generating and normalizing Mel-spectrograms and handcrafted features, testing and training a model composed of a CNN and a Perceptron, and validation of the results.
 
 -------------------------------------------------------
 
