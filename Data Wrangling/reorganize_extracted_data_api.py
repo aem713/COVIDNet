@@ -24,23 +24,33 @@ def make_new_dir(new_path):
 
 def subfolder_extractor(source, target, operation, flag):
   """
-    Performs extraction of subfolders within a specified parent folder.
-    It can either simply remove the first layer of subfolders or can 
-    do so in addition to renaming the files with the names of their respective
-    parent folders.
+  Performs extraction of subfolders within a specified parent folder.
+  It can either simply remove the first layer of subfolders or can 
+  do so in addition to renaming the files with the names of their respective
+  parent folders.
 
-    inputs:
-        - source: the subfolder one is attempting to remove
-        - target: the target folder to extract the desired files and/or
-                  directories to
-        - operation: move or copy the files
-        - flag: 0 represents to simply remove the first layer of subfolders
-                1 represents to remove the first layer of subfolders as well as
-                  to rename the files to include the names of their parent
-                  folders
+  Parameters
+  ----------
+  source: string
+    The subfolder one is attempting to remove
+  
+  target: string
+    The target folder to extract the desired files and/or directories to
+  
+  operation: string
+    Move or copy the files
+  
+  flag: int
+    0 represents to simply remove the first layer of subfolders
+    1 represents to remove the first layer of subfolders as well as
+        to rename the files to include the names of their parent
+        folders
 
-    Returns: N/A
-    """
+  Returns
+  -------
+    N/A
+
+  """
   # Define root and target directories 
   root_src_dir = os.path.join('.', source)
   root_target_dir = os.path.join('.',target)
@@ -50,24 +60,13 @@ def subfolder_extractor(source, target, operation, flag):
   else:
     depth = 2
 
-  # print('root_src_dir: ' + str(root_src_dir))
-  # print('root_target_dir: ' + str(root_target_dir))
-  # print('-------------------------')
   # Walk across all files and directories in our root directory
 
   for src_dir, dirs, files in os.walk(root_src_dir):
     if src_dir[len(root_src_dir):].count(os.sep) < depth:
-  
-  #for src_dir, dirs, files in os.walk(root_src_dir):
-      # print('src_dir: ' + src_dir)
-      # print('dirs: ' + str(dirs))
-      # print('files: ' + str(files))
-      # print('-----------------------')
+
       dst_dir = src_dir.replace(root_src_dir, root_target_dir)
-      # print('dst_dir: ' + dst_dir)
-      # print('root_src_dir: ' + root_src_dir)
-      # print('root_target_dir: ' + root_target_dir)
-      # print('=======================')
+
     # Create the necessary destination directories to move the copies of the
     #   contents of the subfolders one is trying to remove.
       if not os.path.exists(dst_dir):
@@ -95,19 +94,27 @@ def subfolder_extractor(source, target, operation, flag):
 
 def cleaner(data_dir, new_path, desired_directories, flag):
   """
-    Calls subfolder_extractor function and cleans up any remaining empty
-    subfolders within the source folder given by data_dir
+  Calls subfolder_extractor function and cleans up any remaining empty
+  subfolders within the source folder given by data_dir
 
-    inputs:
-        - data_dir: the source folder one is attempting to clean
-        - new_path: the new destination directory to move to
-        - flag: 0 represents to simply remove the first layer of subfolders
-                1 represents to remove the first layer of subfolders as well as
-                  to rename the files to include the names of their parent
-                  folders
+  Parameters
+  ----------
+  data_dir: string
+    The source folder one is attempting to clean
+  
+  new_path: string
+    The new destination directory to move to
+  
+  flag: int
+    0 represents to simply remove the first layer of subfolders
+    1 represents to remove the first layer of subfolders as well as
+      to rename the files to include the names of their parent folders
 
-    Returns: N/A
-    """
+  Returns: 
+  --------
+    N/A
+
+  """
   # List comprehension to compile all the directories within data_dir
   directories = [d for d in os.listdir(data_dir) 
                  if os.path.isdir(os.path.join(data_dir, d))]
@@ -139,16 +146,23 @@ def cleaner(data_dir, new_path, desired_directories, flag):
 
 def org_into_sounds(data_dir, desired_directories):
   """
-    Organizes the files in the source directory into their appropriate
-      subdirectories within the source directory
+  Organizes the files in the source directory into their appropriate
+    subdirectories within the source directory
 
-    inputs:
-        - data_dir: the source folder one is attempting to organize
-        - desired_directories: a list of desired directories that the user
-                               intends to sort all files in data_dir into
+  Parameters:
+  -----------
+    data_dir: string
+      The source folder one is attempting to organize
+    
+    desired_directories: list
+      A list of desired directories that the user
+        intends to sort all files in data_dir into
 
-    Returns: N/A
-    """
+    Returns: 
+    --------
+      N/A
+
+  """
   # Creates directories in data_dir as listed in desired_directories
   for d in desired_directories:
     make_new_dir(os.path.join(data_dir, d))
