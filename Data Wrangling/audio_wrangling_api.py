@@ -19,11 +19,17 @@ def status_regroup(dmg):
   """
     Regroup covid status to more 
 
-    inputs:
-        - dmg: demographic data with raw covid status categories
+    Parameters
+    ----------
+    dmg: pd.DataFrame
+      demographic data with raw covid status categories
 
-    Returns: demographic data with columns containing new covid status categories
-    """
+    Returns: 
+    -------
+    dmg: pd.DataFrame
+      demographic data with columns containing new covid status categories
+  """
+  # regroup COVID-19 status
   dmg.loc[(dmg['covid_status']=='healthy'),'status_regroup'] = 'healthy'
   dmg.loc[(dmg['covid_status']=='no_resp_illness_exposed'),'status_regroup'] = 'exposed'
   dmg.loc[(dmg['covid_status']=='positive_asymp'),'status_regroup'] = 'positive'
@@ -31,7 +37,8 @@ def status_regroup(dmg):
   dmg.loc[(dmg['covid_status']=='positive_moderate'),'status_regroup'] = 'positive'
   dmg.loc[(dmg['covid_status']=='recovered_full'),'status_regroup'] = 'recovered'
   dmg.loc[(dmg['covid_status']=='resp_illness_not_identified'),'status_regroup'] = 'resp_illness'
-
+ 
+  # assign binary COVID-19 label
   dmg.loc[(dmg['status_regroup']=='healthy'),'covid_pos'] = 0
   dmg.loc[(dmg['status_regroup']=='recovered'),'covid_pos'] = 0
   dmg.loc[(dmg['status_regroup']=='positive'),'covid_pos'] = 1
@@ -41,20 +48,34 @@ def pos_neg_split(dset, dmg):
   """
     Divide demographic data into covid positive and covid negative groups 
 
-    inputs:
-        - dset: name of the dataset
-        - dmg: demographic data with covid status categories
+    Parameters
+    ----------
+    dset: str
+      name of the COVID-19 dataset
 
-    Returns: demographic data for covid positive and covid negative groups separately without covid labels
-    """
+    dmg: pd.DataFrame
+      demographic data with covid status categories
+
+    Returns: 
+    -------
+    pos: pd.DataFrame
+      demographic data for covid positive without covid labels
+    
+    neg: pd.DataFrame
+      demographic data for covid negative without covid labels
+  """
   if dset == "coswara":
+    # divide demographic data based on COVID-19 label
     pos = dmg.loc[(dmg['covid_pos']==1)]
     neg = dmg.loc[(dmg['covid_pos']==0)]
+    # remove columns with COVID-19 labels
     pos.drop(columns=['covid_status', 'status_regroup','covid_pos'])
     neg.drop(columns=['covid_status', 'status_regroup','covid_pos'])
   elif dset == "coughvid":
+    # divide demographic data based on COVID-19 label
     pos = dmg.loc[(dmg["status"]=="COVID-19")]
     neg = dmg.loc[(dmg["status"]=="healthy")]
+    # remove columns with COVID-19 labels
     pos.drop(columns=['status'])
     neg.drop(columns=['status'])
 
@@ -64,15 +85,32 @@ def train_test_dmg(dmg_pos, dmg_neg, test_pct, val_pct, seed):
   """
     Divide demographic data into training and test sets
 
-    inputs:
-        - dmg_pos: demographic data of covid positive population
-        - dmg_neg: demographic data of covid negative population
-        - test_pct: percentage of data in test set
-        - val_pct: percentage of data in validation set in training set
-        - seed: seed to random generator
+    Parameters
+    ----------
+    dmg_pos: pd.DataFrame
+      demographic data of covid positive population
+      
+    dmg_neg: pd.DataFrame
+      demographic data of covid negative population
+    
+    test_pct: int
+      percentage of data in test set
+    
+    val_pct: int
+      percentage of data in validation set in training set
+    
+    seed: int
+      seed to random generator
 
-    Returns: dictionaries containing demographic features and ids in training, validation and test sets respectively
-    """
+    Returns: 
+    -------
+    X: dictionary
+      demographic features in training, validation and test sets respectively
+
+    id: dictionary
+      ids in training, validation and test sets respectively
+  """
+  # initialize dictionary to record demographic and id in each subset
   X_train = {}
   X_val = {}
   X_test = {}
@@ -80,6 +118,7 @@ def train_test_dmg(dmg_pos, dmg_neg, test_pct, val_pct, seed):
   id_val = {}
   id_test = {}
 
+  # split demographic data into train, validation, test set
   n_pos = len(dmg_pos.index)
   n_neg = len(dmg_neg.index)
   X_pos, X_test['pos'], y_train_pos, y_test_pos = train_test_split(dmg_pos, [1]*n_pos, test_size=test_pct, random_state=seed)
@@ -87,6 +126,7 @@ def train_test_dmg(dmg_pos, dmg_neg, test_pct, val_pct, seed):
   X_train['pos'], X_val['pos'], y_train_pos, y_val_pos = train_test_split(X_pos, [1]*len(X_pos.index), test_size=val_pct, random_state=seed)
   X_train['neg'], X_val['neg'], y_train_neg, y_val_neg = train_test_split(X_neg, [0]*len(X_neg.index), test_size=val_pct, random_state=seed)
 
+  # get id in train, validation, test set
   id_train['pos'] = X_train['pos'].index
   id_val['pos'] = X_val['pos'].index
   id_test['pos'] = X_test['pos'].index
@@ -95,6 +135,7 @@ def train_test_dmg(dmg_pos, dmg_neg, test_pct, val_pct, seed):
   id_val['neg'] = X_val['neg'].index
   id_test['neg'] = X_test['neg'].index
 
+  # map demographic and id to train, validation, and test labels
   id = {}
   id['train'] = id_train
   id['val'] = id_val
@@ -111,50 +152,85 @@ def train_test_org(dset, src, target, id):
   """
     Reorganize audio data into training vs test and covid positive vs negative folders
 
-    inputs:
-        - dset: name of the dataset
-        - src: source folder of audio files
-        - target: target folder of the reorganized folders
-        - id: dictionary of ids organized by subset and covid label
+    Parameters
+    ----------
+    dset: str
+      name of the dataset
+    
+    src: os.path
+      source folder of audio files
+    
+    target: os.path
+      target folder of the reorganized folders
+    
+    id: dictionary 
+      ids organized by subset and covid label
 
-    Returns: N/A
-    """
-  if not os.path.exists(target):
-    os.makedirs(target)
-    os.chdir(src) 
+    Returns: 
+    -------
+    N/A
+  """
+  if dset == "coswara":
+    # check if data already exist
+    if not os.path.exists(target):
+      os.makedirs(target)
+      os.chdir(src) 
 
-    for group in ['train','val','test']:
-      for covid in ['pos','neg']:
-        if dset == "coswara":
+      # iterate through train, validation, test sets
+      for group in ['train','val','test']:
+        # iterate through positive and negative labels
+        for covid in ['pos','neg']:
+          # iterate through each audio data type
           for data_type in os.scandir():
-            new_target = target+"/"+data_type.name+"/"+group+'/'+covid
+            new_target = os.path.join(target,data_type.name,group,covid)
+            # make target directory if not already exist
             if not os.path.exists(new_target):
               os.makedirs(new_target)
+            # copy appropriate data with ids in the current subset
             for file_ in os.scandir(data_type):
               filename = file_.name
               id = filename.split("_")[0]
               if id in id[group][covid]:
                 shutil.copy(file_,new_target)
+            # remove erroreous data
             remove_invalid(new_target)
+    else:
+      print("Data already exist")
 
-        elif dset == "coughvid":
-          new_target = target+'/coughvid/'+group+'/'+covid
+  elif dset == "coughvid":
+    # make directory for coughvid if not already exist
+    target1 = os.path.join(target,'coughvid')
+    # check if data already exist
+    if not os.path.isdir(target1):
+      # iterate through train, validation, test sets
+      for group in ['train','val','test']:
+        # iterate through positive and negative labels
+        for covid in ['pos','neg']:
+          new_target = os.path.join(target,'coughvid',group,covid)
+          # make target directory if not already exist
           if not os.path.exists(new_target):
             os.makedirs(new_target)
+          # copy target audios with ids in the current subset
           copy_target_audios(src,new_target,id[group][covid])
-  else:
-    print("Data already exist")
+    else:
+      print("Data already exist")
 
 def webm_to_wav(input, output):
   """
     covert webm audio file to wav
 
-    inputs:
-        - input: input path and filename
-        - output: output path and filename
+    Parameters
+    ----------
+    input: os.path
+      input file path
+    
+    output: os.path
+      output file path
 
-    Returns: N/A
-    """
+    Returns: 
+    -------
+    N/A
+  """
   command = ['ffmpeg', '-i', input, output]
   subprocess.run(command,stdout=subprocess.PIPE,stdin=subprocess.PIPE)
 
@@ -162,23 +238,31 @@ def convert_webms(src, target):
   """
     Convert webm files to csv files
 
-    inputs:
-        - src: source folder of webm files
-        - target: target folder of the wav files
+    Parameters
+    ----------
+    src: os.path
+      source folder of webm files
+    
+    target: os.path
+      target folder of the wav files
 
-    Returns: N/A
-    """
+    Returns: 
+    -------
+    N/A
+  """
+  # check if data already exist
   if not os.path.exists(target):
     os.makedirs(target)
     os.chdir(src) 
+    # convert .webm or .ogg file to .wav file
     for file_ in os.scandir():
       input = file_.name
       if input.endswith('.webm'):
         output = target+input[:-4]+'wav'
       elif input.endswith('.ogg'):
         output = target+input[:-3]+'wav'
-        if not os.path.isfile(output):
-          webm_to_wav(input, output)
+      if not os.path.isfile(output):
+        webm_to_wav(input, output)
   else:
     print("Data already exist")
 
@@ -186,28 +270,37 @@ def copy_target_audios(src,target,ids):
   """
     copy target udio files based on subject id
 
-    inputs:
-        - src: source folder of webm files
-        - target: target folder of the wav files
-        - ids: target subject ids
+    Parameters
+    ----------
+    src: os.path
+      source folder of webm files
+    
+    target: os.path
+      target folder of the wav files
+    
+    ids: list
+      target subject ids
 
-    Returns: N/A
-    """
-  if not os.path.exists(target):
-    os.makedirs(target)
-    os.chdir(src) 
-    for id in ids:
-      shutil.copy(src+id+'.wav',target)
-  else:
-    print("Data already exist")
+    Returns: 
+    -------
+    N/A
+  """
+  for id in ids:
+    shutil.copy(src+id+'.wav',target)
 
 def remove_invalid(dir):
   """
     remove invalid audio files in directory
 
-    input:
-        - dir: folder for audio files
-    """
+    Parameters
+    ----------
+    dir: os.path
+      folder for audio files
+    
+    Returns: 
+    -------
+    N/A
+  """
   os.chdir(dir)
   for file_ in os.scandir():
     if os.path.getsize(file_) < 10000:
@@ -215,24 +308,38 @@ def remove_invalid(dir):
 
 def combine_audios(dir,aud_types,label):
   """
-    copy target udio files based on subject id
+    combine audio files (e.g. shallow and heavy coughs)
 
-    inputs:
-        - dir: directory containing the regrouped data
-        - aud_types: types of audios need combining
-        - label: target label of the combined data
+    Parameters
+    ----------
+    dir: os.path
+      directory containing the regrouped data
+    
+    aud_types: list
+      types of audios type names (str) need combining
+    
+    label: str
+      target label of the combined data
 
-    Returns: N/A
-    """
-  if not os.path.exists(dir+'/'+label):
+    Returns: 
+    -------
+    N/A
+  """
+  # check if combined data already exist
+  if not os.path.exists(os.path.join(dir,label)):
+    # iterate through audio types that needs combining
     for aud_type in aud_types:
+      # iterate through train, validation, and test sets
       for group in ['train','val','test']:
+        # iterate through positive and negative labels
         for covid in ['pos','neg']:
-          src = dir + '/' + aud_type + '/' + group + '/' + covid 
-          target = dir + '/' + label + '/' + group + '/' + covid 
+          src = os.path.join(dir, aud_type, group, covid)
+          target = os.path.join(dir, label, group, covid)
+          # make target directory if not already exist
           if not os.path.exists(target):
             os.makedirs(target)
             src_files = os.listdir(src)
+            # copy target audios in the current subset to the combined location
             for file_name in src_files:
               full_file_name = os.path.join(src, file_name)
               if os.path.isfile(full_file_name):
