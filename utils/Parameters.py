@@ -22,7 +22,7 @@ N_MFCC = 13
 # Number of PCA Components used in feature reduction
 PCA_COMPONENTS = 256
 
-EPOCHS = 1
+EPOCHS = 100
 
 LEARNING_RATE = 0.0005
 
