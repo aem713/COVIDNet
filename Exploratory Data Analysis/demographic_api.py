@@ -18,11 +18,17 @@ def status_regroup(dmg):
   """
     Regroup covid status to more 
 
-    inputs:
-        - dmg: demographic data with raw covid status categories
+    Parameters:
+    ----------
+    dmg: pd.DataFrame
+      demographic data with raw covid status categories
 
-    Returns: demographic data with columns containing new covid status categories
-    """
+    Returns: 
+    -------
+    dmg: pd.DataFrame
+      demographic data with columns containing new covid status categories
+  """
+  # regroup COVID-19 status
   dmg.loc[(dmg['covid_status']=='healthy'),'status_regroup'] = 'healthy'
   dmg.loc[(dmg['covid_status']=='no_resp_illness_exposed'),'status_regroup'] = 'exposed'
   dmg.loc[(dmg['covid_status']=='positive_asymp'),'status_regroup'] = 'positive'
@@ -31,24 +37,28 @@ def status_regroup(dmg):
   dmg.loc[(dmg['covid_status']=='recovered_full'),'status_regroup'] = 'recovered'
   dmg.loc[(dmg['covid_status']=='resp_illness_not_identified'),'status_regroup'] = 'resp_illness'
 
-  dmg.loc[(dmg['status_regroup']=='healthy'),'covid_pos'] = 0
-  dmg.loc[(dmg['status_regroup']=='recovered'),'covid_pos'] = 0
-  dmg.loc[(dmg['status_regroup']=='positive'),'covid_pos'] = 1
   return dmg
 
 def covid_labels(dmg):
   """
     Add covid labels to the demographic data 
 
-    inputs:
-        - dmg: raw demographic data without covid labels
+    Parameters:
+    ----------
+    dmg: pd.DataFrame
+      raw demographic data without covid labels
 
-    Returns: demographic data with covid labels
-    """
+    Returns: 
+    -------
+    dmg: pd.DataFrame
+      demographic data with covid labels
+  """
+  # assign binary COVID-19 label
   dmg.loc[(dmg['status_regroup']=='healthy'),'covid_pos'] = 0
   dmg.loc[(dmg['status_regroup']=='recovered'),'covid_pos'] = 0
   dmg.loc[(dmg['status_regroup']=='positive'),'covid_pos'] = 1
 
+  # assign categorical COVID-19 label for COVID-19 positive, negative, unsure
   dmg.loc[(dmg['status_regroup']=='exposed'),'covid_neg'] = 2
   dmg.loc[(dmg['status_regroup']=='resp_illness'),'covid_neg'] = 2
   dmg.loc[(dmg['status_regroup']=='healthy'),'covid_neg'] = 1
@@ -60,14 +70,24 @@ def set_sns(dpi,small,medium,big):
   """
     Set seaborn style and font size
 
-    inputs:
-        - dpi: default pixel redering
-        - small: font size used for text, axes titles, legend, and tick labels
-        - medium: font size used for x and y labels
-        - big: font size used for figure title
+    Parameters:
+    ----------
+    dpi: int
+      default pixel redering
+    
+    small: int
+      font size used for text, axes titles, legend, and tick labels
+    
+    medium: int
+      font size used for x and y labels
+    
+    big: int
+      font size used for figure title
 
-    Returns: N/A
-    """
+    Returns: 
+    ------- 
+    N/A
+  """
 
   sns.set(rc={"figure.dpi":dpi, 'savefig.dpi':dpi})
   sns.set_context('notebook')
@@ -86,26 +106,39 @@ def covid_bar(dset, dmg):
   """
     Plot bar graph according to covid labels
 
-    inputs:
-        - dset: name of the dataset
-        - dmg: demographic data for coswara dataset
+    Parameters:
+    ----------
+    dset: str
+      name of the dataset
 
-    Returns: N/A
-    """
+    dmg: pd.DataFrame
+      demographic data 
+
+    Returns: 
+    ------- 
+    N/A
+  """
   fig, ax = plt.subplots(figsize=(5,3))
 
   if dset == "coswara":
+    # plot figure
     sns.countplot(ax=ax, x="covid_neg", order=[1,0,2],\
                   hue="status_regroup", hue_order=["recovered","healthy","positive","resp_illness","exposed"],\
                   palette=["#5f9e6e","#5a75a4","#b65d60","#cc8962","#857aaa"], data=dmg)
+    
+    # Add legend and axis labels
     ax.set(ylabel="Frequency",xlabel="")
     plt.xticks([-0.2,1,2.2],["positive","negative","unsure"])
     plt.text(0.5,-250,'COVID-19 Status')
     plt.legend(loc='upper right', bbox_to_anchor=(1,1), labels=["recovered","healthy","positive","respiratory illness","exposed"])
+  
   elif dset == "coughvid":
+    # plot figure
     sns.countplot(ax=ax, x="status",order=["healthy","COVID-19","symptomatic"],\
                 hue="status", hue_order=["healthy","COVID-19","symptomatic"],\
                 palette=["#5a75a4","#b65d60","#cc8962"], data=dmg)
+    
+    # Add legend and axis labels
     ax.set(ylabel="Frequency",xlabel="")
     plt.xticks([-0.2,1,2.2],["negative","positive","unsure"])
     plt.text(0.5,-2000,'COVID-19 Status')
@@ -117,36 +150,49 @@ def age_hist(dset, dmg):
   """
     Plot histogram of age distribution by gender
 
-    inputs:
-        - dset: name of the dataset
-        - dmg: demographic data for coswara dataset
+    Parameters:
+    ----------
+    dset: str
+      name of the dataset
 
-    Returns: N/A
-    """
+    dmg: pd.DataFrame
+      demographic data 
+
+    Returns: 
+    ------- 
+    N/A
+  """
   fig, ax = plt.subplots(figsize=(5,3))
 
+  # plot figure
   if dset == "coswara":
     sns.histplot(ax=ax, data=dmg, x="a", hue="g", legend = False)
-    ax.set(ylabel="Frequency",xlabel="Age")
   elif dset == "coughvid":
     sns.histplot(ax=ax, data=dmg, x="age", hue="gender", hue_order=["female","male"], legend = False)
-    
+  
+  # Add legend and axis labels
   ax.set(ylabel="Frequency",xlabel="Age")
   plt.legend(loc='upper right', labels=['Male', 'Female'])
   plt.show(ax)
 
 def symptom_plot(dset, dmg):
   """
-    Plot bar graph for symptoms based on covid labels in coswara dataset
+    Plot bar graph for symptoms based on covid labels
 
-    inputs:
-        - dset: name of the dataset
-        - dmg: demographic data for coswara dataset
+    Parameters:
+    ----------
+    dset: str
+      name of the dataset
 
-    Returns: N/A
-    """
+    dmg: pd.DataFrame
+      demographic data 
+
+    Returns: 
+    ------- 
+    N/A
+  """
   if dset == "coswara":
-    # Create dataframe for symptoms based on covid labels
+    # initialize dataframe abd calculate the number of each symptom in each COVID-19 category
     symps = ["cough","diarrhoea","bd","st","fever","ftg","mp","loss_of_smell"]
     symps_df = pd.DataFrame(columns=["name","count","healthy_count","unhealthy_count"])
     symps_df["name"] = symps
@@ -156,7 +202,7 @@ def symptom_plot(dset, dmg):
         symps_df.loc[symps_df["name"]==symp,"cneg_count"] = len(dmg.loc[(dmg[symp]==True)&(dmg["covid_pos"]==0)].index)
     symps_df["c_count"] = symps_df["cpos_count"]+symps_df["cneg_count"]
 
-    # Plot bar graph
+    # plot figure in descending order for total symptom count 
     fig, ax = plt.subplots(figsize=(5, 3))
     symps_df = symps_df.sort_values("c_count", ascending=False)
 
@@ -168,7 +214,7 @@ def symptom_plot(dset, dmg):
     sns.barplot(x="cpos_count", y="name", data=symps_df,
                 label="COVID-19 positive",color="orange")
 
-    # Add a legend and informative axis label
+    # Add legend and informative axis labels
     ax.legend(ncol=1, loc="lower right", frameon=True)
     ax.set(ylabel="",
           xlabel="Cases of COVID-19 Symptoms")
@@ -180,19 +226,29 @@ def symptom_plot(dset, dmg):
 
 def covid_mask_reg(dset, dmg):
   """
-    Plot logistic regression for the relationship between mask use and covid in coswara dataset
+    Plot logistic regression for the relationship between mask use and covid label
 
-    inputs:
-        - dset: name of the dataset
-        - dmg: demographic data for coswara dataset
+    Parameters:
+    ----------
+    dset: str
+      name of the dataset
 
-    Returns: N/A
-    """
+    dmg: pd.DataFrame
+      demographic data 
+
+    Returns: 
+    ------- 
+    N/A
+  """
   if dset == "coswara":
+    # rename column name for mask usage
     dmg["Using Mask"] = dmg["um"]
+
+    # plot figure
     ax = sns.lmplot(x="a", y="covid_pos", col="Using Mask", hue="um", data=dmg,
                   y_jitter=.02, logistic=True, truncate=False, legend=False)
     ax.set(xlim=(0, 80), ylim=(-.05, 1.05))
     ax = (ax.set_axis_labels("Age", "COVID-19 Positive"))
+
   elif dset == "coughvid":
     print("coughvid dataset does not have mask use information")
