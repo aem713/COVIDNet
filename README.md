@@ -7,6 +7,12 @@ This process is to create a predictive model for COVID-19 from a set of audio fi
 Broadly, the steps are  data cleaning, generating and normalizing Mel-spectrograms and handcrafted features, testing and training a model composed of a CNN and a Perceptron, and validation of the results.
 
 -------------------------------------------------------
+Instructions
+-------------------------------------------------------
+1) Download the CovidNet_Final.ipynb notebook
+2) Place this notebook in your Rice University Google Drive and open it in Google Colab
+3) Create a shortcut to the Google Drive 'DSCI400' folder provided by the COVIDNet team in your main Google Drive directory. The path should be '/content/gdrive/MyDrive/DSCI400'
+4) Run the COVIDNet notebook. All other required APIs are included in the 'DSCI400' folder provided by the COVIDNet team.
 
 Dependencies
 -------------------------------------------------------
