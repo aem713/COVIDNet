@@ -32,6 +32,7 @@ EXTERNAL TO PYTHON VERSION 3.9.2
 - librosa version 0.8.0 (2021)
 - pandas version 1.2.3 (2021)
 - numpy version 1.20.0 (2021)
+- surfboard 0.2.0 (2021)
 
 Dataset
 ------------------------------------------------------
