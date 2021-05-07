@@ -37,7 +37,6 @@ EXTERNAL TO PYTHON VERSION 3.9.2
 Dataset
 ------------------------------------------------------
 The dataset used for this project is under "Coswara Original Files". The files can also be sourced at "https://github.com/iiscleap/Coswara-Data".
-A guide to running the files in this project is in "demo.md" (currently a work in progress).
 
 Authors:
 -------------------------------------------------------
