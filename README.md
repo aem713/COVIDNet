@@ -10,8 +10,8 @@ Broadly, the steps are  data cleaning, generating and normalizing Mel-spectrogra
 Instructions
 -------------------------------------------------------
 1) Download the CovidNet_Final.ipynb notebook
-2) Place this notebook in your Rice University Google Drive and open it in Google Colab
-3) Create a shortcut to the Google Drive 'DSCI400' folder provided by the COVIDNet team in your main Google Drive directory. The path should be '/content/gdrive/MyDrive/DSCI400'
+2) Place this notebook in your Google Drive and open it in Google Colab
+3) Create a shortcut to the Google Drive 'DSCI400' folder provided by the COVIDNet team via email in your main Google Drive directory. The path should be '/content/gdrive/MyDrive/DSCI400'
 4) Run the COVIDNet notebook. All other required APIs are included in the 'DSCI400' folder provided by the COVIDNet team.
 
 Dependencies
