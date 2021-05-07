@@ -232,12 +232,12 @@ def Get_matrix_inputs(new_audio_path, coswara_audio_path, audio_path, loc, load=
 
     # If we want to load the data from the coswara_audio_path
     if audio_path == coswara_audio_path:
-      x_train = np.load(os.path.join(loc, 'X_Train_Spec_Coswara_15.npy')) # JUST LOAD THE VECTORS
-      y_train = np.load(os.path.join(loc, 'Y_Train_Spec_Coswara_15.npy'))
-      x_test = np.load(os.path.join(loc, 'X_Test_Spec_Coswara_15.npy'))
-      y_test = np.load(os.path.join(loc, 'Y_Test_Spec_Coswara_15.npy'))
-      x_val = np.load(os.path.join(loc, 'X_Val_Spec_Coswara_15.npy'))
-      y_val = np.load(os.path.join(loc, 'Y_Val_Spec_Coswara_15.npy'))
+      x_train = np.load(os.path.join(loc, 'X_Train_Spec_Coswara.npy')) # JUST LOAD THE VECTORS
+      y_train = np.load(os.path.join(loc, 'Y_Train_Spec_Coswara.npy'))
+      x_test = np.load(os.path.join(loc, 'X_Test_Spec_Coswara.npy'))
+      y_test = np.load(os.path.join(loc, 'Y_Test_Spec_Coswara.npy'))
+      x_val = np.load(os.path.join(loc, 'X_Val_Spec_Coswara.npy'))
+      y_val = np.load(os.path.join(loc, 'Y_Val_Spec_Coswara.npy'))
  
     # If we want to load the data from the new_audio_path
     elif audio_path == new_audio_path:
