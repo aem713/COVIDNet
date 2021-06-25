@@ -38,9 +38,3 @@ Dataset
 ------------------------------------------------------
 The dataset used for this project is under "Coswara Original Files". The files can also be sourced at "https://github.com/iiscleap/Coswara-Data".
 
-Authors:
--------------------------------------------------------
- Andrew Xavier, German Gonzalez, Xuanyi (Jessica) Chen, Amar Moturu, James Beattie
-
- ---------------------------------------------------------
-
